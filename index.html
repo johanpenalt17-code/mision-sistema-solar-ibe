@@ -11,8 +11,11 @@
 @media(max-width:850px){.hero{grid-template-columns:1fr}.hero-aside{display:grid;grid-template-columns:140px 1fr;align-items:center}.mission-orbit{height:120px}.phase-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.trial-layout{grid-template-columns:1fr}.sample-frame{min-height:175px}.sample-frame .stim-card{min-height:130px}.planet-art.large{width:120px;height:120px}}
 @media(max-width:560px){.shell{padding:14px 11px 38px}.topbar{align-items:flex-start}.top-actions{max-width:130px}.top-actions .btn{font-size:11px;padding:8px}.brand-mark{width:39px;height:39px}.hero-aside{grid-template-columns:100px 1fr;padding:14px}.phase-grid{grid-template-columns:1fr}.phase-card{min-height:0}.choice-grid{gap:7px}.choice{min-height:115px;padding:8px}.choice .choice-name{font-size:12px}.workspace-head{flex-direction:column}.score-grid{grid-template-columns:1fr 1fr 1fr}.score-card{padding:9px}.score-card .num{font-size:20px}}
 
-/* Controles reservados para la persona adulta */
-.adult-menu{position:relative;z-index:20}.adult-menu>summary{list-style:none;cursor:pointer;border:1px solid var(--line);color:var(--ink);background:#202e52;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:800}.adult-menu>summary::-webkit-details-marker{display:none}.adult-menu .top-actions{position:absolute;right:0;top:calc(100% + 8px);min-width:190px;padding:10px;border:1px solid var(--line);border-radius:14px;background:#111c37;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:stretch}.adult-menu .top-actions .btn{white-space:nowrap}
+/* Herramientas separadas para la persona adulta */
+.adult-menu{position:relative;z-index:20}.adult-menu>summary{list-style:none;cursor:pointer;border:1px solid var(--line);color:var(--ink);background:#202e52;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:800}.adult-menu>summary::-webkit-details-marker{display:none}.adult-tools{position:absolute;right:0;top:calc(100% + 8px);width:min(360px,calc(100vw - 28px));max-height:80vh;overflow:auto;padding:12px;border:1px solid var(--line);border-radius:14px;background:#111c37;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}.adult-tools .top-actions{position:static;min-width:0;padding:0;border:0;background:transparent;box-shadow:none;display:flex;flex-direction:column;align-items:stretch;gap:7px}.adult-tools .btn{white-space:normal}.adult-skip-box{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}.adult-skip-box label,.adult-skip-box p{font-size:12px;color:var(--muted);line-height:1.45;margin:0}.adult-skip-box strong{font-size:13px;color:#f7dd95}.adult-select{width:100%;padding:10px;border:1px solid #455987;border-radius:10px;background:#182545;color:var(--ink);font:inherit}.adult-skip-box p{font-size:11px;color:#c5cbe1}
+/* Ilustraciones: volumen, atmósfera y movimiento suave */
+.planet-art svg{animation:astroFloat 4.8s ease-in-out infinite;transform-origin:50% 50%}.planet-art.large svg{animation-duration:5.7s}.planet-art svg .sun-rays{transform-origin:50px 50px;animation:sunTurn 42s linear infinite}.planet-art svg .sun-glow{transform-origin:50px 50px;animation:sunBreathe 3.3s ease-in-out infinite}
+@keyframes astroFloat{0%,100%{transform:translateY(0) rotate(-.6deg)}50%{transform:translateY(-3px) rotate(.6deg)}}@keyframes sunTurn{to{transform:rotate(360deg)}}@keyframes sunBreathe{0%,100%{opacity:.65;transform:scale(.98)}50%{opacity:1;transform:scale(1.03)}}
 /* Refuerzo visual amable: lluvia de estrellas y cohete */
 .adult-note summary{cursor:pointer;font-weight:800;color:#eee9ff;outline-offset:4px}
 .adult-note[open] summary{margin-bottom:10px}
@@ -27,32 +30,32 @@
 @keyframes rocketZoom{0%{transform:translateY(60px) scale(.3) rotate(-20deg);opacity:0}22%{opacity:1}75%{transform:translateY(-42vh) translateX(15vw) scale(1.25) rotate(16deg);opacity:1}100%{transform:translateY(-70vh) translateX(26vw) scale(.7) rotate(28deg);opacity:0}}
 @keyframes rewardPulse{0%{transform:scale(.97)}45%{transform:scale(1.025)}100%{transform:scale(1)}}
 @keyframes rewardBounce{0%{transform:scale(.4) rotate(-20deg)}65%{transform:scale(1.35) rotate(12deg)}100%{transform:scale(1) rotate(0)}}
-@media(prefers-reduced-motion:reduce){.confetti-bit,.rocket-pop,.feedback.good,.feedback.good .feedback-symbol{animation:none!important}.confetti-bit{opacity:.75;top:20vh}.rocket-pop{opacity:.9;bottom:30vh}}
+@media(prefers-reduced-motion:reduce){.confetti-bit,.rocket-pop,.feedback.good,.feedback.good .feedback-symbol,.planet-art svg,.planet-art svg .sun-rays,.planet-art svg .sun-glow{animation:none!important}.confetti-bit{opacity:.75;top:20vh}.rocket-pop{opacity:.9;bottom:30vh}}
 </style>
 </head>
 <body>
 <div class="shell">
 <header class="topbar">
   <div class="brand"><div class="brand-mark" aria-hidden="true">🚀</div><div><div class="eyebrow">¡Una aventura espacial!</div><h1>Misión Sistema Solar</h1></div></div>
-  <details class="adult-menu"><summary>Opciones para el adulto ▾</summary><div class="top-actions"><button id="downloadCsv" class="btn small">↓ Guardar resultados</button><button id="resetAll" class="btn ghost small">Borrar progreso</button></div></details>
+  <details class="adult-menu" id="adultMenu"><summary>Opciones para el adulto ▾</summary><div class="adult-tools"><div class="top-actions"><button id="downloadCsv" class="btn small">↓ Guardar resultados</button><button id="resetAll" class="btn ghost small">Borrar progreso</button></div><div class="adult-skip-box"><strong>Herramientas de supervisión</strong><label for="adultPhaseSelect">Abrir una misión sin seguir el orden</label><select id="adultPhaseSelect" class="adult-select" aria-label="Seleccionar misión para acceso adulto"></select><button type="button" id="adultOpenPhase" class="btn small">Abrir misión seleccionada</button><p>Solo para la persona adulta. Puede alterar la secuencia y la interpretación de los resultados. El menú separa esta función de la ruta del niño, pero no es un bloqueo de seguridad.</p><button type="button" id="toggleRewardAudio" class="btn ghost small" aria-pressed="true">🔊 Sonido de refuerzo: activado</button></div></div></details>
 </header>
 <section class="hero">
   <div class="hero-card"><span class="pill">🚀 ¡Hola, explorador del espacio!</span><h2>¡Vamos a viajar por el espacio!<br><span style="color:var(--cyan)">Mira, escucha y encuentra.</span></h2><p>Vamos a conocer el Sol y los planetas. En cada misión, mira el dibujo o escucha el nombre y toca la opción que tú creas. ¡Paso a paso!</p><div class="statline"><span>Tu aventura</span><strong id="globalProgressText">0 de 10 misiones</strong></div><div class="progress-track" style="margin-top:8px"><div class="progress-fill" id="globalProgress"></div></div></div>
   <aside class="hero-card hero-aside"><div class="mission-orbit" aria-hidden="true"><div class="orbit"></div><div class="orbit o2"></div><div class="core-sun"></div><div class="mini-planet"></div><div class="mini-planet p2"></div></div><div><div class="eyebrow">¡Prepárate!</div><h3 style="margin:7px 0 6px">¡Encuentra las parejas!</h3><p style="font-size:13px;margin:0">Toca una opción cada vez. No importa ir despacio. ¡Vamos a jugar!</p></div></aside>
 </section>
-<details class="note adult-note"><summary>Nota para la persona adulta</summary><strong>Prototipo académico:</strong> el audio utiliza la voz disponible en el navegador. Los resultados se guardan en este dispositivo y no se envían a un servidor. No introduzca nombres ni datos personales. Antes de usarlo con un niño, revise y autorice el procedimiento con el equipo docente, obtenga los consentimientos pertinentes y valore la adecuación individual. Las pruebas sin retroalimentación no informan al niño si acertó.</details>
+<details class="note adult-note"><summary>Nota para la persona adulta</summary><strong>Prototipo académico:</strong> el audio utiliza la voz disponible en el navegador. Los resultados se guardan en este dispositivo y no se envían a un servidor. No introduzca nombres ni datos personales. Antes de usarlo con un niño, revise y autorice el procedimiento con el equipo docente, obtenga los consentimientos pertinentes y valore la adecuación individual. Las pruebas sin retroalimentación no informan al niño si acertó. El avance manual del menú adulto omite requisitos y debe registrarse como desviación del procedimiento.</details>
 <section>
-  <div class="section-title"><div><h2>Elige tu misión</h2><p>Vamos una por una. Las misiones nuevas se abrirán cuando termines las anteriores.</p></div></div>
+  <div class="section-title"><div><h2>Elige tu misión</h2><p>Vamos una por una. Las misiones se abrirán una a una cuando termines la anterior.</p></div></div>
   <div id="phaseGrid" class="phase-grid"></div>
 </section>
 <section id="workspace" class="workspace hidden" aria-live="polite"></section>
 <details class="note adult-note"><summary>Resultados para la persona adulta</summary><section id="results" class="results hidden"></section></details>
-<footer class="footer">Aventura espacial de demostración. No es una prueba clínica validada y, por sí sola, no demuestra aprendizaje en un niño real.<br>Los dibujos están incluidos en este archivo y el audio depende de las voces disponibles en el dispositivo.</footer>
+<footer class="footer">Aventura espacial de demostración. No es una prueba clínica validada y, por sí sola, no demuestra aprendizaje en un niño real.<br>Los dibujos y el efecto sonoro están incluidos/generados en este archivo; la pronunciación de los nombres depende de las voces disponibles en el dispositivo.</footer>
 </div>
 <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
 <script>
 'use strict';
-const STORE_KEY='misionSistemaSolarIBE_v2';
+const STORE_KEY='misionSistemaSolarIBE_v4';
 const bodies=[
  {id:'sun',name:'Sol',text:'SOL',category:'star',categoryLabel:'ESTRELLA',kind:'sun',fact:'La estrella central del sistema solar.'},
  {id:'mercury',name:'Mercurio',text:'MERCURIO',category:'planet',categoryLabel:'PLANETA',kind:'mercury',fact:'El planeta más cercano al Sol.'},
@@ -62,51 +65,53 @@ const bodies=[
 const categoryStimuli=[{id:'star',label:'ESTRELLA',icon:'🌟'},{id:'planet',label:'PLANETA',icon:'🪐'}];
 const systemChoices=[{id:'solar',label:'SISTEMA SOLAR',icon:'☀️'},{id:'galaxy',label:'VÍA LÁCTEA',icon:'🌌'},{id:'constellation',label:'CONSTELACIÓN',icon:'✧'},{id:'other-system',label:'OTRO SISTEMA',icon:'🛰️'}];
 const phaseDefs=[
- {id:'baseline',n:1,title:'Línea base',kidTitle:'¡A mirar el espacio!',icon:'🧭',desc:'Evalúa relaciones iniciales e identidad sin enseñar ni corregir.',kidDesc:'Mira los dibujos, escucha y toca la opción que te parezca. ¡Vamos con calma!',prereq:[],kind:'assessment'},
- {id:'trainAB',n:2,title:'Entrenamiento A–B',kidTitle:'Une el dibujo y el nombre',icon:'🖼️',desc:'Imagen del astro → seleccionar su nombre hablado. Incluye luz verde y recompensa.',kidDesc:'Mira el dibujo y escucha los nombres. Toca el que va con el dibujo.',prereq:['baseline'],kind:'training'},
- {id:'trainBC',n:3,title:'Entrenamiento B–C',kidTitle:'Escucha y busca la palabra',icon:'🔊',desc:'Nombre hablado → seleccionar la palabra escrita, con repaso de la serie lineal.',kidDesc:'Escucha el nombre y busca la palabra que va con él. Puedes escuchar otra vez.',prereq:['trainAB'],kind:'training'},
- {id:'derived',n:4,title:'Pruebas derivadas e identidad',kidTitle:'¡Encuentra lo que va junto!',icon:'🔗',desc:'Evalúa B–A, C–B, A–C, C–A y las relaciones de identidad sin pistas.',kidDesc:'Mira o escucha y toca lo que creas que va junto. Después seguimos con otra.',prereq:['trainBC'],kind:'assessment'},
- {id:'trainCategory',n:5,title:'Entrenamiento de categorías',kidTitle:'¿Estrella o planeta?',icon:'⭐',desc:'Programa muchos-a-uno: Sol → estrella; Mercurio, Venus y Tierra → planeta.',kidDesc:'¿Dónde va este astro? Toca “estrella” o “planeta”.',prereq:['derived'],kind:'training'},
- {id:'testCategory',n:6,title:'Prueba de categorías',kidTitle:'¡Clasifica los astros!',icon:'🧪',desc:'Comprueba la clasificación sin mostrar aciertos ni errores.',kidDesc:'Mira el astro y toca “estrella” o “planeta”. ¡Tú eliges!',prereq:['trainCategory'],kind:'assessment'},
- {id:'trainSolar',n:7,title:'Entrenamiento: Sistema Solar',kidTitle:'La familia del Sol',icon:'☀️',desc:'Relaciona muestras de los cuatro astros con la categoría de pertenencia SISTEMA SOLAR.',kidDesc:'Estos astros forman parte de la familia del Sol. Busca “Sistema Solar”.',prereq:['testCategory'],kind:'training'},
- {id:'testSolar',n:8,title:'Prueba: Sistema Solar',kidTitle:'¿De qué familia son?',icon:'🌞',desc:'Evalúa la pertenencia sin retroalimentación diferencial.',kidDesc:'Mira el astro y toca el grupo que creas que va con él.',prereq:['trainSolar'],kind:'assessment'},
- {id:'generalization',n:9,title:'Generalización',kidTitle:'¡Dibujos diferentes!',icon:'✨',desc:'Usa variantes visuales nuevas para probar transferencia sin ayuda.',kidDesc:'Algunos dibujos se ven un poquito distintos. Busca lo que va junto.',prereq:['testSolar'],kind:'assessment'},
- {id:'maintenance',n:10,title:'Mantenimiento',kidTitle:'¿Te acuerdas?',icon:'🪐',desc:'Sonda diferida sugerida una semana después, sin entrenamiento adicional.',kidDesc:'¡Vamos a recordar lo que aprendimos! Esta misión es mejor después de unos días.',prereq:['generalization'],kind:'assessment'}
+ {id:'baseline',n:1,title:'Línea base',kidTitle:'¡Despegamos!',icon:'🧭',desc:'18 ensayos: dos por cada relación AB, BC, BA, CB, AC, CA, AA, BB y CC. Sin enseñanza ni corrección.',kidDesc:'Mira, escucha y toca la opción que te parezca. ¡Vamos con calma!',prereq:[],kind:'assessment'},
+ {id:'trainAB',n:2,title:'Entrenamiento A–B',kidTitle:'Une el dibujo y el nombre',icon:'🖼️',desc:'12 ensayos. Imagen del astro → seleccionar su nombre hablado. Criterio: al menos 10/12.',kidDesc:'Mira el dibujo. Escucha los nombres y toca el que va con él.',prereq:['baseline'],kind:'training'},
+ {id:'trainBC',n:3,title:'Entrenamiento B–C',kidTitle:'Escucha y busca la palabra',icon:'🔊',desc:'12 ensayos. Nombre hablado → seleccionar la palabra escrita. Criterio: al menos 10/12.',kidDesc:'Escucha el nombre y busca la palabra que va con él. Puedes escuchar otra vez.',prereq:['trainAB'],kind:'training'},
+ {id:'derivedProbe',n:4,title:'Pruebas derivadas e identidad',kidTitle:'¡Encuentra lo que va junto!',icon:'🔗',desc:'20 ensayos combinados de simetría (B–A y C–B), relaciones combinadas (A–C y C–A) e identidad (A–A, B–B y C–C). Sin retroalimentación diferencial.',kidDesc:'Mira o escucha y toca la opción que creas que va junto. ¡Tú puedes!',prereq:['trainBC'],kind:'assessment'},
+ {id:'trainCategory',n:5,title:'Entrenamiento de categorías',kidTitle:'¿Estrella o planeta?',icon:'⭐',desc:'12 ensayos. Sol → estrella; Mercurio, Venus y Tierra → planeta. Criterio: al menos 10/12.',kidDesc:'¿Dónde va este astro? Toca “estrella” o “planeta”.',prereq:['derivedProbe'],kind:'training'},
+ {id:'testCategory',n:6,title:'Prueba de categorías',kidTitle:'¡Clasifica los astros!',icon:'🧪',desc:'12 ensayos para comprobar la clasificación sin mostrar aciertos ni errores.',kidDesc:'Mira el astro y toca “estrella” o “planeta”. ¡Tú eliges!',prereq:['trainCategory'],kind:'assessment'},
+ {id:'trainSolar',n:7,title:'Entrenamiento: Sistema Solar',kidTitle:'La familia del Sol',icon:'☀️',desc:'12 ensayos de pertenencia a la categoría SISTEMA SOLAR. Criterio: al menos 10/12.',kidDesc:'Busca “Sistema Solar”, la familia del Sol.',prereq:['testCategory'],kind:'training'},
+ {id:'testSolar',n:8,title:'Prueba: Sistema Solar',kidTitle:'¿De qué familia son?',icon:'🌞',desc:'12 ensayos de pertenencia sin retroalimentación diferencial.',kidDesc:'Mira el astro y toca el grupo que creas que va con él.',prereq:['trainSolar'],kind:'assessment'},
+ {id:'generalization',n:9,title:'Generalización',kidTitle:'¡Dibujos diferentes!',icon:'✨',desc:'16 ensayos con variantes visuales nuevas para probar transferencia sin ayuda.',kidDesc:'Algunos dibujos se ven un poquito distintos. Busca lo que va junto.',prereq:['testSolar'],kind:'assessment'},
+ {id:'maintenance',n:10,title:'Mantenimiento',kidTitle:'¡Recordemos lo aprendido!',icon:'🪐',desc:'20 ensayos combinados: relaciones derivadas, categoría y pertenencia al Sistema Solar. Se recomienda aplicar aproximadamente una semana después.',kidDesc:'¡Vamos a recordar las parejas y los grupos! Es mejor jugar después de unos días.',prereq:['generalization'],kind:'assessment'}
 ];
-function blankData(){return {version:2,createdAt:new Date().toISOString(),completed:{},completedAt:{},logs:[],blocks:{trainAB:{consecutive:0,results:[]},trainBC:{consecutive:0,results:[]},trainCategory:{consecutive:0,results:[]},trainSolar:{consecutive:0,results:[]}},stars:0};}
-function loadData(){try{const v=JSON.parse(localStorage.getItem(STORE_KEY));if(v&&v.version===2)return {...blankData(),...v,blocks:{...blankData().blocks,...v.blocks}};}catch(e){}return blankData();}
-let data=loadData();let active=null;let queue=[];let cursor=0;let current=null;let awaitingCorrection=false;let feedbackState=null;let phaseInitialCorrect=0;let phaseInitialTotal=0;let phaseStartLogIndex=0;let blockIndex=0;let currentRunId='';
+function blankData(){return {version:4,createdAt:new Date().toISOString(),completed:{},completedAt:{},logs:[],blocks:{trainAB:{consecutive:0,results:[]},trainBC:{consecutive:0,results:[]},trainCategory:{consecutive:0,results:[]},trainSolar:{consecutive:0,results:[]}},stars:0};}
+function loadData(){try{const v=JSON.parse(localStorage.getItem(STORE_KEY));if(v&&v.version===4)return {...blankData(),...v,blocks:{...blankData().blocks,...v.blocks}};}catch(e){}return blankData();}
+let data=loadData();let active=null;let queue=[];let cursor=0;let current=null;let awaitingCorrection=false;let feedbackState=null;let phaseInitialCorrect=0;let phaseInitialTotal=0;let phaseStartLogIndex=0;let blockIndex=0;let currentRunId='';let phaseAccessMode='sequential';
 const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data));renderPhaseGrid();renderGlobalProgress();}
 function isTraining(id){return ['trainAB','trainBC','trainCategory','trainSolar'].includes(id)}
-function canOpen(id){const def=phaseDefs.find(p=>p.id===id);return !!def&&def.prereq.every(k=>data.completed[k]);}
-function displayPhaseStatus(p){if(data.completed[p.id])return ['¡Hecha!','done'];if(!canOpen(p.id))return ['Espera un poco','locked'];if(isTraining(p.id)){const b=data.blocks[p.id];return [b.results.length?`Intento ${b.results.length+1}`:'¡Lista!',''];}return ['¡Lista!',''];}
+function canOpen(id){const def=phaseDefs.find(p=>p.id===id);if(!def)return false;return def.prereq.every(k=>!!data.completed[k]&&canOpen(k));}
+function displayPhaseStatus(p){if(data.completed[p.id]&&canOpen(p.id))return ['¡Hecha!','done'];if(!canOpen(p.id))return ['Primero las anteriores','locked'];if(isTraining(p.id)){const b=data.blocks[p.id];return [b.results.length?`Intento ${b.results.length+1}`:'¡Lista!',''];}return ['¡Lista!',''];}
 function renderPhaseGrid(){const grid=$('#phaseGrid');grid.innerHTML='';phaseDefs.forEach(p=>{const [label,css]=displayPhaseStatus(p);const disabled=!canOpen(p.id);const card=document.createElement('article');card.className='phase-card';card.innerHTML=`<div class="phase-top"><div class="phase-icon">${p.icon}</div><span class="status ${css}">${label}</span></div><h3>${p.n}. ${esc(p.kidTitle||p.title)}</h3><p>${esc(p.kidDesc||p.desc)}</p><button class="btn ${disabled?'':'primary'}" data-start-phase="${p.id}" ${disabled?'disabled':''}>${disabled?'Primero termina otra misión':data.completed[p.id]?'Jugar otra vez':'¡Vamos!'}</button>`;grid.appendChild(card);});}
-function renderGlobalProgress(){const total=phaseDefs.length;const n=phaseDefs.filter(p=>data.completed[p.id]).length;$('#globalProgress').style.width=(n/total*100)+'%';$('#globalProgressText').textContent=`${n} de ${total} misiones`;}
+function renderGlobalProgress(){const total=phaseDefs.length;const n=phaseDefs.filter(p=>data.completed[p.id]&&canOpen(p.id)).length;$('#globalProgress').style.width=(n/total*100)+'%';$('#globalProgressText').textContent=`${n} de ${total} misiones`;}
 function makeStim(type,body,variant=0){return {type,body,variant};}
 function stimKey(s){return s.type==='D'?'D:'+s.category:s.type==='E'?'E:'+s.id:s.type+':'+s.body+(s.variant?':v'+s.variant:'');}
 function shuffle(a){const out=a.slice();for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
 function bodyById(id){return bodies.find(b=>b.id===id)||bodies[0];}
+let artInstance=0;
 function astroSvg(body,variant=0){
- const uid=`${body.id}-${variant}`;
- const colors={
-  sun:{light:'#FFF17A',mid:variant?'#FFB83F':'#FFD83D',dark:'#F28C28'},
-  mercury:{light:'#E7E3E0',mid:variant?'#B8B2B0':'#D0CAC8',dark:'#79737A'},
-  venus:{light:'#FFE6A0',mid:variant?'#F7C25F':'#FFC75B',dark:'#E48A36'},
-  earth:{light:'#9DEAFF',mid:variant?'#3999F6':'#36B7F4',dark:'#1267BF'}
- }[body.kind];
- const gradient=`<defs><radialGradient id="planet-${uid}" cx="30%" cy="23%"><stop offset="0" stop-color="${colors.light}"/><stop offset=".58" stop-color="${colors.mid}"/><stop offset="1" stop-color="${colors.dark}"/></radialGradient><clipPath id="clip-${uid}"><circle cx="50" cy="50" r="31"/></clipPath></defs>`;
+ const uid=`${body.id}-${variant}-${++artInstance}`;
+ const planetId=`planet-${uid}`, shadeId=`shade-${uid}`, clipId=`clip-${uid}`, hazeId=`haze-${uid}`;
+ const defs=`<defs>
+  <radialGradient id="${planetId}" cx="28%" cy="22%" r="78%"><stop offset="0" stop-color="${body.kind==='sun'?'#FFF9B7':body.kind==='mercury'?'#F1ECE9':body.kind==='venus'?'#FFF1C4':'#B8F3FF'}"/><stop offset=".42" stop-color="${body.kind==='sun'?'#FFD44A':body.kind==='mercury'?(variant?'#C3BDBB':'#AFA9A9'):body.kind==='venus'?(variant?'#F1B85F':'#F7CD78'):(variant?'#2585E8':'#2589D8')}"/><stop offset=".78" stop-color="${body.kind==='sun'?'#F48A24':body.kind==='mercury'?'#716D75':body.kind==='venus'?'#C77B36':'#1458A5'}"/><stop offset="1" stop-color="${body.kind==='sun'?'#A93D1D':body.kind==='mercury'?'#363745':body.kind==='venus'?'#82472C':'#071D59'}"/></radialGradient>
+  <linearGradient id="${shadeId}" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".48" stop-color="#071326" stop-opacity=".05"/><stop offset="1" stop-color="#020611" stop-opacity=".62"/></linearGradient>
+  <radialGradient id="${hazeId}"><stop offset=".68" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".92" stop-color="${body.kind==='earth'?'#73E6FF':body.kind==='venus'?'#FFD88C':body.kind==='sun'?'#FFB535':'#DDD9DC'}" stop-opacity=".18"/><stop offset="1" stop-color="#FFFFFF" stop-opacity=".55"/></radialGradient>
+  <clipPath id="${clipId}"><circle cx="50" cy="50" r="32.5"/></clipPath>
+ </defs>`;
  let art='';
  if(body.kind==='sun'){
-  art=`<path d="M50 2 L57 16 L68 7 L69 22 L84 17 L80 32 L97 31 L87 43 L99 51 L84 58 L92 72 L76 71 L78 88 L64 79 L56 98 L48 82 L38 96 L33 79 L18 86 L22 70 L5 71 L15 57 L1 49 L16 42 L7 28 L23 31 L20 15 L36 22 L43 6 L50 20Z" fill="#FFB72E" stroke="#F58A22" stroke-width="2.5" stroke-linejoin="round"/><circle cx="50" cy="50" r="32" fill="url(#planet-${uid})" stroke="#FFE879" stroke-width="2"/><ellipse cx="38" cy="39" rx="3.7" ry="5" fill="#7A3B21"/><ellipse cx="62" cy="39" rx="3.7" ry="5" fill="#7A3B21"/><circle cx="37" cy="38" r="1.2" fill="#fff"/><circle cx="61" cy="38" r="1.2" fill="#fff"/><path d="M39 55 Q50 67 62 54" fill="none" stroke="#9E4425" stroke-width="3.4" stroke-linecap="round"/><ellipse cx="29" cy="51" rx="5" ry="3" fill="#FF9877" opacity=".9"/><ellipse cx="71" cy="51" rx="5" ry="3" fill="#FF9877" opacity=".9"/>`;
+  const rays=Array.from({length:16},(_,i)=>`<path transform="rotate(${i*22.5} 50 50)" d="M50 2 C54 8 55 12 50 17 C45 12 46 8 50 2Z"/>`).join('');
+  art=`<circle class="sun-glow" cx="50" cy="50" r="43" fill="#FF9B2F" opacity=".25"/><g class="sun-rays" fill="#FFAE34" stroke="#FF8A22" stroke-width=".7">${rays}</g><circle cx="50" cy="50" r="34.5" fill="url(#${planetId})" stroke="#FFE69B" stroke-width="1.8"/><g clip-path="url(#${clipId})" opacity=".8"><path d="M16 37 Q28 29 40 36 T64 34 T88 37" fill="none" stroke="#FFF09A" stroke-width="4"/><path d="M13 55 Q28 47 43 55 T72 52 T89 55" fill="none" stroke="#EA6D24" stroke-width="5"/><path d="M25 67 Q36 61 48 65 T72 63" fill="none" stroke="#FFF0A7" stroke-width="2.5"/><g fill="#E96E22" opacity=".7"><circle cx="36" cy="29" r="2.4"/><circle cx="62" cy="43" r="2.8"/><circle cx="44" cy="57" r="1.9"/><circle cx="68" cy="67" r="2.2"/></g></g><circle cx="50" cy="50" r="34" fill="url(#${hazeId})"/>`;
  }else if(body.kind==='mercury'){
-  art=`<circle cx="50" cy="50" r="34" fill="url(#planet-${uid})" stroke="#F2E9E7" stroke-width="2.4"/><g fill="#77717A" opacity=".62"><circle cx="36" cy="31" r="5.5"/><circle cx="60" cy="28" r="3.2"/><circle cx="65" cy="48" r="7"/><circle cx="39" cy="56" r="4.5"/><circle cx="53" cy="70" r="5.3"/><circle cx="25" cy="44" r="2.6"/><circle cx="76" cy="63" r="2.8"/></g><g fill="#F4EDEA" opacity=".65"><circle cx="34.5" cy="29.5" r="1.8"/><circle cx="63" cy="45" r="2"/><circle cx="37.5" cy="54.5" r="1.5"/><circle cx="51" cy="68" r="1.8"/></g>`;
+  art=`<circle cx="50" cy="50" r="34" fill="url(#${planetId})" stroke="#D9D4D5" stroke-width="1.5"/><g clip-path="url(#${clipId})"><g fill="#6D6972" opacity=".72" stroke="#5D5962" stroke-width="1"><circle cx="34" cy="31" r="5.2"/><circle cx="57" cy="27" r="3.4"/><circle cx="65" cy="47" r="7"/><circle cx="39" cy="55" r="4.6"/><circle cx="52" cy="69" r="5.8"/><circle cx="24" cy="44" r="2.7"/><circle cx="76" cy="63" r="3"/><circle cx="44" cy="43" r="2.2"/><circle cx="30" cy="67" r="2.4"/></g><g fill="none" stroke="#EEE8E6" stroke-width="1.3" opacity=".7"><circle cx="34" cy="31" r="3.8"/><circle cx="65" cy="47" r="5.3"/><circle cx="52" cy="69" r="4.1"/></g><path d="M50 15 A35 35 0 0 1 50 85 L50 15Z" fill="#080D1C" opacity=".24"/></g><circle cx="50" cy="50" r="34" fill="url(#${shadeId})"/><circle cx="50" cy="50" r="34" fill="url(#${hazeId})"/>`;
  }else if(body.kind==='venus'){
-  art=`<circle cx="50" cy="50" r="34" fill="url(#planet-${uid})" stroke="#FFE7AF" stroke-width="2.4"/><g clip-path="url(#clip-${uid})" fill="none" stroke-linecap="round" opacity=".9"><path d="M14 29 Q32 17 48 29 T87 27" stroke="#FFF0BD" stroke-width="7"/><path d="M13 43 Q32 32 51 43 T88 41" stroke="#E99748" stroke-width="5"/><path d="M13 57 Q32 46 51 57 T88 55" stroke="#FFF0BD" stroke-width="8"/><path d="M17 71 Q34 60 52 71 T84 69" stroke="#E99748" stroke-width="5"/></g>`;
+  art=`<circle cx="50" cy="50" r="34" fill="url(#${planetId})" stroke="#FFF0C6" stroke-width="1.5"/><g clip-path="url(#${clipId})" fill="none" stroke-linecap="round"><path d="M12 26 Q30 17 48 25 T89 24" stroke="#FFF0BE" stroke-width="8" opacity=".9"/><path d="M10 37 Q31 28 51 37 T90 35" stroke="#D98B43" stroke-width="5" opacity=".78"/><path d="M11 48 Q28 40 48 49 T90 46" stroke="#FFE8A1" stroke-width="7" opacity=".9"/><path d="M13 61 Q33 51 52 61 T88 58" stroke="#CE7839" stroke-width="5" opacity=".7"/><path d="M18 72 Q37 63 54 71 T82 69" stroke="#FFF0BB" stroke-width="6" opacity=".85"/><path d="M16 31 Q43 44 81 29" stroke="#FFFFFF" stroke-width="2" opacity=".42"/><path d="M16 57 Q42 69 81 53" stroke="#FFFFFF" stroke-width="2" opacity=".36"/></g><circle cx="50" cy="50" r="34" fill="url(#${shadeId})"/><circle cx="50" cy="50" r="34" fill="url(#${hazeId})"/>`;
  }else{
-  art=`<circle cx="50" cy="50" r="34" fill="url(#planet-${uid})" stroke="#BDEFFF" stroke-width="2.4"/><g clip-path="url(#clip-${uid})"><path d="M17 24 L28 17 L39 22 L37 32 L29 37 L31 45 L21 48 L14 39Z" fill="#51C86D" stroke="#239B55" stroke-width="1.5"/><path d="M46 18 L57 21 L62 29 L57 36 L49 35 L44 42 L37 36 L40 27Z" fill="#66D96B" stroke="#239B55" stroke-width="1.5"/><path d="M54 43 L68 38 L78 44 L83 55 L75 63 L67 59 L60 67 L50 61 L48 51Z" fill="#4FCC68" stroke="#239B55" stroke-width="1.5"/><path d="M23 56 L33 51 L42 57 L39 69 L30 77 L21 69Z" fill="#70DE78" stroke="#239B55" stroke-width="1.5"/><path d="M12 43 Q32 53 50 46 T88 43" fill="none" stroke="#E5FBFF" stroke-width="2.5" opacity=".7"/></g>`;
+  art=`<circle cx="50" cy="50" r="34" fill="url(#${planetId})" stroke="#98E6FF" stroke-width="1.7"/><g clip-path="url(#${clipId})"><g fill="#38AE66" stroke="#18884F" stroke-width="1.1"><path d="M15 25 L27 17 L38 21 L36 29 L42 35 L34 42 L28 38 L23 47 L15 41Z"/><path d="M45 18 L56 20 L62 27 L58 34 L49 34 L44 40 L38 33 L40 25Z"/><path d="M53 43 L66 37 L77 43 L84 54 L77 61 L68 58 L60 69 L51 61 L48 51Z"/><path d="M20 55 L30 50 L40 57 L38 67 L29 77 L20 69Z"/><path d="M40 75 L48 71 L54 77 L49 83 L41 82Z"/></g><g fill="none" stroke="#EAFBFF" stroke-linecap="round" opacity=".72"><path d="M17 28 Q31 22 44 27 T77 27" stroke-width="2.5"/><path d="M26 48 Q39 43 51 47 T80 46" stroke-width="2"/><path d="M16 63 Q28 58 39 62" stroke-width="2"/></g><path d="M50 16 A35 35 0 0 1 50 84 L50 16Z" fill="#06143C" opacity=".2"/></g><circle cx="50" cy="50" r="34" fill="url(#${shadeId})"/><circle cx="50" cy="50" r="34" fill="url(#${hazeId})"/>`;
  }
- return `<svg viewBox="0 0 100 100" role="img" aria-label="Dibujo animado de ${esc(body.name)}">${gradient}${art}</svg>`;
+ return `<svg viewBox="0 0 100 100" role="img" aria-label="Ilustración del ${esc(body.name)} con volumen y detalles" xmlns="http://www.w3.org/2000/svg">${defs}${art}</svg>`;
 }
 function stimHtml(stim,where='choice'){
  if(stim.type==='A'){const b=bodyById(stim.body);return `<div class="stim-card"><div class="planet-art ${where==='sample'?'large':''}">${astroSvg(b,stim.variant||0)}</div>${where==='choice'?`<span class="choice-name">Imagen</span>`:`<span class="micro">Imagen del astro</span>`}</div>`;}
@@ -122,51 +127,102 @@ function relationTrial(rel,body,rep=0,variant=0){const map={AB:['A','B'],BC:['B'
 function balancedOrder(trials,optionType){const type=optionType||trials[0].choicesType;let positioned=[];if(type==='D'||type==='E'){const count=type==='D'?2:4;let slots=[];if(count===2){slots=Array(6).fill(0).concat(Array(6).fill(1));}else{slots=[];for(let i=0;i<trials.length;i++)slots.push(i%count);}slots=shuffle(slots);positioned=trials.map((t,i)=>({...t,correctPos:slots[i],choices:[]}));}else{let slots=[];for(let i=0;i<trials.length;i++)slots.push(i%4);slots=shuffle(slots);positioned=trials.map((t,i)=>({...t,correctPos:slots[i],choices:[]}));}
  return shuffle(positioned).map(t=>{const opts=optionSet(t.choicesType);const correct=opts.find(o=>stimKey(o)===stimKey(t.target))||opts[0];const others=shuffle(opts.filter(o=>stimKey(o)!==stimKey(correct)));const choices=[];let oi=0;for(let i=0;i<opts.length;i++)choices.push(i===t.correctPos?correct:others[oi++]);return {...t,choices};});}
 function makePhaseTrials(id){let trials=[];
- if(id==='baseline'){['AB','BC','BA','CB','AC','CA','AA','BB','CC'].forEach(rel=>bodies.forEach(b=>{trials.push(relationTrial(rel,b,0));}));return shuffleByRelationBlocks(trials);}
+ if(id==='baseline'){
+  // 18 ensayos: dos por cada una de las nueve relaciones, en una sola misión.
+  const rels=['AB','BC','BA','CB','AC','CA','AA','BB','CC'];
+  rels.forEach((rel,ri)=>{for(let rep=0;rep<2;rep++){const body=bodies[(ri+rep*2)%bodies.length];trials.push(relationTrial(rel,body,rep));}});
+  return shuffleByRelationBlocks(trials);
+ }
  if(id==='trainAB'||id==='trainBC'){const rel=id==='trainAB'?'AB':'BC';bodies.forEach(b=>{for(let r=0;r<3;r++)trials.push(relationTrial(rel,b,r));});return balancedOrder(trials);}
- if(id==='derived'){['BA','CB','AC','CA','AA','BB','CC'].forEach(rel=>bodies.forEach(b=>{for(let r=0;r<3;r++)trials.push(relationTrial(rel,b,r));}));return shuffleByRelationBlocks(trials);}
- if(id==='trainCategory'||id==='testCategory'){bodies.forEach(b=>['A','B','C'].forEach(t=>trials.push({relation:'MTO-CATEGORÍA',sample:makeStim(t,b.id),target:{type:'D',category:b.category},choicesType:'D',bodyId:b.id})));return balancedOrder(trials,'D');}
- if(id==='trainSolar'||id==='testSolar'){bodies.forEach(b=>['A','B','C'].forEach(t=>trials.push({relation:'MTO-SISTEMA-SOLAR',sample:makeStim(t,b.id),target:{type:'E',id:'solar'},choicesType:'E',bodyId:b.id})));return balancedOrder(trials,'E');}
- if(id==='generalization'){bodies.forEach(b=>{for(let r=0;r<3;r++){trials.push({...relationTrial("AB",b,r,1),relation:"A′-B"});trials.push({...relationTrial("AC",b,r,1),relation:"A′-C"});}});return shuffleByRelationBlocks(trials);}
- if(id==='maintenance'){['BA','CB','AC','CA'].forEach(rel=>bodies.forEach(b=>{for(let r=0;r<3;r++)trials.push(relationTrial(rel,b,r));}));bodies.forEach(b=>['A','B','C'].forEach(t=>{trials.push({relation:'MANTENIMIENTO-CATEGORÍA',sample:makeStim(t,b.id),target:{type:'D',category:b.category},choicesType:'D',bodyId:b.id});trials.push({relation:'MANTENIMIENTO-SISTEMA',sample:makeStim(t,b.id),target:{type:'E',id:'solar'},choicesType:'E',bodyId:b.id});}));return shuffleByRelationBlocks(trials);}
+ if(id==='derivedProbe'){
+  // 20 ensayos para cubrir simetría, relaciones combinadas e identidad, sin abrir más misiones.
+  const rels=['BA','CB','AC','CA','AA','BB','CC'];
+  rels.forEach((rel,ri)=>{const count=rel==='CC'?2:3;for(let rep=0;rep<count;rep++){const body=bodies[(ri+rep*2)%bodies.length];trials.push(relationTrial(rel,body,rep));}});
+  return shuffleByRelationBlocks(trials);
+ }
+ if(id==='trainCategory'||id==='testCategory'){
+  bodies.forEach(b=>['A','B','C'].forEach(t=>trials.push({relation:'MTO-CATEGORÍA',sample:makeStim(t,b.id),target:{type:'D',category:b.category},choicesType:'D',bodyId:b.id})));
+  return balancedOrder(trials,'D');
+ }
+ if(id==='trainSolar'||id==='testSolar'){
+  bodies.forEach(b=>['A','B','C'].forEach(t=>trials.push({relation:'MTO-SISTEMA-SOLAR',sample:makeStim(t,b.id),target:{type:'E',id:'solar'},choicesType:'E',bodyId:b.id})));
+  return balancedOrder(trials,'E');
+ }
+ if(id==='generalization'){bodies.forEach(b=>{for(let r=0;r<2;r++){trials.push({...relationTrial('AB',b,r,1),relation:'A′-B'});trials.push({...relationTrial('AC',b,r,1),relation:'A′-C'});}});return shuffleByRelationBlocks(trials);}
+ if(id==='maintenance'){
+  // 8 relaciones derivadas + 6 ensayos de categoría + 6 de pertenencia = 20.
+  const rels=['BA','CB','AC','CA'];
+  rels.forEach((rel,ri)=>{for(let rep=0;rep<2;rep++){const body=bodies[(ri+rep*2)%bodies.length];trials.push({...relationTrial(rel,body,rep),relation:'MANTENIMIENTO-'+rel});}});
+  const categorySamples=[['sun','A'],['mercury','B'],['venus','C'],['earth','A'],['sun','B'],['mercury','C']];
+  categorySamples.forEach(([bodyId,t])=>{const b=bodyById(bodyId);trials.push({relation:'MANTENIMIENTO-CATEGORÍA',sample:makeStim(t,bodyId),target:{type:'D',category:b.category},choicesType:'D',bodyId});});
+  const systemSamples=[['sun','A'],['mercury','B'],['venus','C'],['earth','A'],['venus','B'],['earth','C']];
+  systemSamples.forEach(([bodyId,t])=>trials.push({relation:'MANTENIMIENTO-SISTEMA',sample:makeStim(t,bodyId),target:{type:'E',id:'solar'},choicesType:'E',bodyId}));
+  return shuffleByRelationBlocks(trials);
+ }
  return [];
 }
 function shuffleByRelationBlocks(trials){const groups={};trials.forEach(t=>(groups[t.relation]??=[]).push(t));let out=[];const keys=shuffle(Object.keys(groups));while(keys.some(k=>groups[k].length)){keys.forEach(k=>{if(groups[k].length)out.push(groups[k].pop());});}return balancedOrderWithExistingTargets(out);}
 function balancedOrderWithExistingTargets(trials){const groups={};trials.forEach(t=>(groups[t.relation]??=[]).push(t));Object.keys(groups).forEach(rel=>{const g=groups[rel];let slots=[];const t=g[0];const count=t.choicesType==='D'?2:t.choicesType==='E'?4:4;if(count===2){slots=Array(Math.ceil(g.length/2)).fill(0).concat(Array(Math.floor(g.length/2)).fill(1));}else{for(let i=0;i<g.length;i++)slots.push(i%4);}slots=shuffle(slots);g.forEach((x,i)=>{x.correctPos=slots[i];const opts=optionSet(x.choicesType);const correct=opts.find(o=>stimKey(o)===stimKey(x.target))||opts[0];const others=shuffle(opts.filter(o=>stimKey(o)!==stimKey(correct)));let j=0;x.choices=opts.map((_,idx)=>idx===x.correctPos?correct:others[j++]);});});return shuffle(Object.values(groups).flat());}
 function phaseLabel(id){return (phaseDefs.find(p=>p.id===id)||{}).title||id;}
-function relationLabel(rel){const map={AB:'A–B · Imagen → audio',BC:'B–C · Audio → palabra escrita',BA:'B–A · Audio → imagen',CB:'C–B · Palabra escrita → audio',AC:'A–C · Imagen → palabra escrita',CA:'C–A · Palabra escrita → imagen',AA:'A–A · Identidad visual',BB:'B–B · Identidad auditiva',CC:'C–C · Identidad escrita',"A′-B":'A′–B · Nueva imagen → audio',"A′-C":'A′–C · Nueva imagen → palabra escrita','MTO-CATEGORÍA':'Muchos a uno · Categoría','MTO-SISTEMA-SOLAR':'Muchos a uno · Sistema Solar','MANTENIMIENTO-CATEGORÍA':'Mantenimiento · categoría','MANTENIMIENTO-SISTEMA':'Mantenimiento · Sistema Solar'};return map[rel]||rel;}
+function relationLabel(rel){const map={AB:'A–B · Imagen → audio',BC:'B–C · Audio → palabra escrita',BA:'B–A · Audio → imagen',CB:'C–B · Palabra escrita → audio',AC:'A–C · Imagen → palabra escrita',CA:'C–A · Palabra escrita → imagen',AA:'A–A · Identidad visual',BB:'B–B · Identidad auditiva',CC:'C–C · Identidad escrita',"A′-B":'A′–B · Nueva imagen → audio',"A′-C":'A′–C · Nueva imagen → palabra escrita','MTO-CATEGORÍA':'Muchos a uno · Categoría','MTO-SISTEMA-SOLAR':'Muchos a uno · Sistema Solar','MANTENIMIENTO-CATEGORÍA':'Mantenimiento · categoría','MANTENIMIENTO-SISTEMA':'Mantenimiento · Sistema Solar','MANTENIMIENTO-BA':'Mantenimiento · B–A','MANTENIMIENTO-CB':'Mantenimiento · C–B','MANTENIMIENTO-AC':'Mantenimiento · A–C','MANTENIMIENTO-CA':'Mantenimiento · C–A'};return map[rel]||rel;}
 function explainPhase(id){const msgs={
  baseline:'Mira, escucha y toca la opción que te parezca. ¡No hay prisa!',
  trainAB:'Mira el dibujo. Escucha los nombres y toca el que va con él.',
  trainBC:'Escucha el nombre y busca la palabra que va con él. Puedes escuchar otra vez.',
- derived:'Mira o escucha y toca lo que creas que va junto. Después seguimos con otra.',
+ derivedProbe:'Mira o escucha y toca la opción que creas que va junto. Busca también los que son iguales.',
  trainCategory:'¿Dónde va este astro: estrella o planeta?',
  testCategory:'Mira el astro y toca “estrella” o “planeta”. ¡Tú eliges!',
  trainSolar:'Busca “Sistema Solar”, la familia del Sol.',
  testSolar:'Mira el astro y toca el grupo que creas que va con él.',
  generalization:'Los dibujos se ven un poco distintos. Busca lo que va junto.',
- maintenance:'¡Vamos a recordar lo que aprendimos! Es mejor jugar esta misión después de unos días.'
+ maintenance:'¡Vamos a recordar las parejas y los grupos! Es mejor jugar después de unos días.'
  };return msgs[id]||'¡Vamos a jugar!';}
-function startPhase(id){if(!canOpen(id))return;active=id;queue=makePhaseTrials(id);cursor=0;current=null;awaitingCorrection=false;feedbackState=null;phaseInitialCorrect=0;phaseInitialTotal=0;phaseStartLogIndex=data.logs.length;currentRunId=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);blockIndex=isTraining(id)?data.blocks[id].results.length+1:1;$('#results').classList.add('hidden');$('#workspace').classList.remove('hidden');renderPhaseGrid();renderTrial();$('#workspace').scrollIntoView({behavior:'smooth',block:'start'});}
+function startPhase(id,adultOverride=false){if(!adultOverride&&!canOpen(id))return;phaseAccessMode=adultOverride?'adult_override':'sequential';active=id;queue=makePhaseTrials(id);cursor=0;current=null;awaitingCorrection=false;feedbackState=null;phaseInitialCorrect=0;phaseInitialTotal=0;phaseStartLogIndex=data.logs.length;currentRunId=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);blockIndex=isTraining(id)?data.blocks[id].results.length+1:1;$('#results').classList.add('hidden');$('#workspace').classList.remove('hidden');renderPhaseGrid();renderTrial();$('#workspace').scrollIntoView({behavior:'smooth',block:'start'});}
 function renderTrial(){
  if(cursor>=queue.length){finishPhase();return;}
  current=queue[cursor];awaitingCorrection=false;feedbackState=null;
  const p=phaseDefs.find(x=>x.id===active);const isAssess=p.kind==='assessment';const total=queue.length;
  const sampleLabel=current.sample.type==='A'?'Mira el dibujo':current.sample.type==='B'?'Escucha el nombre':current.sample.type==='C'?'Mira la palabra':current.sample.type==='D'?'Mira la categoría':'Mira el grupo';
  let choicePrompt='Toca la opción que creas que va junto.';
- if(active==='trainAB')choicePrompt='Escucha las opciones y toca el nombre del dibujo.';
+ if(active==='trainAB')choicePrompt='Toca el altavoz para escuchar. Después, toca la tarjeta que va con el dibujo.';
  else if(active==='trainBC')choicePrompt='Escucha el nombre y toca la palabra que va con él.';
  else if(active==='trainCategory'||active==='testCategory')choicePrompt='¿Estrella o planeta? Toca una opción.';
  else if(active==='trainSolar'||active==='testSolar')choicePrompt='¿A qué grupo pertenece? Toca una opción.';
- else if(current.choicesType==='B')choicePrompt='Escucha las opciones y toca la que creas que va junto.';
+ else if(current.choicesType==='B')choicePrompt='Toca el altavoz para escuchar y la tarjeta para elegir.';
  else if(current.choicesType==='C')choicePrompt='Toca la palabra que creas que va junto.';
  let choices=current.choices.map((s,i)=>`<button type="button" class="choice" data-choice="${esc(stimKey(s))}" data-idx="${i}" aria-label="Elegir opción ${i+1}">${stimHtml(s,'choice')}</button>`).join('');
  const stageText=isAssess?'¡Tu turno!':'¡Vamos a aprender!';
- $('#workspace').innerHTML=`<div class="panel"><div class="workspace-head"><div><span class="pill">${p.icon} Misión ${p.n} de 10 · ${stageText}</span><h2>${esc(p.kidTitle||p.title)}</h2><p>${esc(explainPhase(active))}</p></div><button type="button" class="btn ghost small" id="exitPhase">Salir</button></div><div class="trial-meta"><span>Pregunta ${cursor+1} de ${total}</span>${isTraining(active)?`<span>Intento ${blockIndex}</span>`:''}</div><div class="trial-progress"><div class="statline"><span>¡Sigue adelante!</span><strong>${Math.round(cursor/total*100)}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${cursor/total*100}%"></div></div></div><div class="trial-layout"><div class="sample-area"><div class="label">${sampleLabel}</div><div class="sample-frame">${stimHtml(current.sample,'sample')}</div></div><div class="choices-area"><div class="label kid-prompt">${choicePrompt}</div><div class="choice-grid" id="choiceGrid">${choices}</div><div id="feedbackBox" class="feedback" role="status"></div><div class="workspace-controls"><span class="helptext">${isAssess?'Elige una opción. Después iremos a la siguiente pregunta.':'¡Cada intento te ayuda a aprender! Puedes tomarte tu tiempo.'}</span><button type="button" id="nextTrial" class="btn primary" disabled>¡Siguiente! →</button></div></div></div></div>`;
+ $('#workspace').innerHTML=`<div class="panel"><div class="workspace-head"><div><span class="pill">${p.icon} Misión ${p.n} de ${phaseDefs.length} · ${stageText}</span><h2>${esc(p.kidTitle||p.title)}</h2><p>${esc(explainPhase(active))}</p></div><button type="button" class="btn ghost small" id="exitPhase">Salir</button></div><div class="trial-meta"><span>Pregunta ${cursor+1} de ${total}</span>${phaseAccessMode==='adult_override'?`<span>⚠️ Acceso manual de adulto</span>`:''}${isTraining(active)?`<span>Intento ${blockIndex}</span>`:''}</div><div class="trial-progress"><div class="statline"><span>¡Sigue adelante!</span><strong>${Math.round(cursor/total*100)}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${cursor/total*100}%"></div></div></div><div class="trial-layout"><div class="sample-area"><div class="label">${sampleLabel}</div><div class="sample-frame">${stimHtml(current.sample,'sample')}</div></div><div class="choices-area"><div class="label kid-prompt">${choicePrompt}</div><div class="choice-grid" id="choiceGrid">${choices}</div><div id="feedbackBox" class="feedback" role="status"></div><div class="workspace-controls"><span class="helptext">${isAssess?'Elige una opción. Después iremos a la siguiente pregunta.':'¡Cada intento te ayuda a aprender! Puedes tomarte tu tiempo.'}</span><button type="button" id="nextTrial" class="btn primary" disabled>¡Siguiente! →</button></div></div></div></div>`;
  $('#exitPhase').addEventListener('click',exitPhase);$('#nextTrial').addEventListener('click',()=>{if(!$('#nextTrial').disabled)advanceTrial();});$('#choiceGrid').addEventListener('click',onChoice);$('#workspace').querySelectorAll('[data-speak]').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();speak(b.dataset.speak);});b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();speak(b.dataset.speak);}});});
 }
 function speak(words){if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){showFeedback('neutral','🔈','Audio no disponible','Prueba el juego en una versión reciente de Chrome o Edge, o con otro navegador compatible.');return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(words);u.lang='es-ES';u.rate=.86;u.pitch=1;const voices=window.speechSynthesis.getVoices();const spanish=voices.find(v=>/^es(-|_)/i.test(v.lang));if(spanish)u.voice=spanish;window.speechSynthesis.speak(u);}
 function showFeedback(kind,symbol,title,body){const box=$('#feedbackBox');if(!box)return;box.className=`feedback show ${kind}`;box.innerHTML=`<span class="feedback-symbol">${symbol}</span><div><strong>${esc(title)}</strong><span>${esc(body)}</span></div>`;}
+let rewardAudioEnabled=true;try{rewardAudioEnabled=localStorage.getItem('misionSistemaSolarRewardAudio')!=='false';}catch(e){}
+let rewardAudioContext=null;
+function playSpaceReward(){
+ if(!rewardAudioEnabled)return;
+ const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+ if(!AudioContextClass)return;
+ try{
+  rewardAudioContext=rewardAudioContext||new AudioContextClass();
+  const ctx=rewardAudioContext;
+  if(ctx.state==='suspended')ctx.resume();
+  const now=ctx.currentTime;
+  // Whoosh ascendente suave, como el despegue de una nave.
+  const length=Math.floor(ctx.sampleRate*.72),buffer=ctx.createBuffer(1,length,ctx.sampleRate),samples=buffer.getChannelData(0);
+  for(let i=0;i<length;i++)samples[i]=(Math.random()*2-1)*Math.pow(1-i/length,1.35);
+  const src=ctx.createBufferSource();src.buffer=buffer;
+  const filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.setValueAtTime(220,now);filter.frequency.exponentialRampToValueAtTime(1350,now+.58);
+  const gain=ctx.createGain();gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.075,now+.13);gain.gain.exponentialRampToValueAtTime(.0001,now+.72);
+  src.connect(filter);filter.connect(gain);gain.connect(ctx.destination);src.start(now);src.stop(now+.74);
+  // Tono grave ascendente y discreto para dar sensación de motor al despegar.
+  const engine=ctx.createOscillator(),engineFilter=ctx.createBiquadFilter(),engineGain=ctx.createGain();engine.type='sawtooth';engine.frequency.setValueAtTime(62,now);engine.frequency.exponentialRampToValueAtTime(175,now+.68);engineFilter.type='lowpass';engineFilter.frequency.setValueAtTime(260,now);engineFilter.frequency.exponentialRampToValueAtTime(620,now+.68);engineGain.gain.setValueAtTime(.0001,now);engineGain.gain.exponentialRampToValueAtTime(.022,now+.16);engineGain.gain.exponentialRampToValueAtTime(.0001,now+.7);engine.connect(engineFilter);engineFilter.connect(engineGain);engineGain.connect(ctx.destination);engine.start(now);engine.stop(now+.72);
+  // Campanitas brillantes para el efecto de estrellas.
+  [784,988,1174,1568].forEach((frequency,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain(),t=now+.22+i*.085;osc.type='sine';osc.frequency.setValueAtTime(frequency,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.075,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+.34);osc.connect(g);g.connect(ctx.destination);osc.start(t);osc.stop(t+.36);});
+ }catch(err){console.warn('No fue posible reproducir el audio de refuerzo.',err);}
+}
+function renderRewardAudioButton(){const btn=$('#toggleRewardAudio');if(!btn)return;btn.textContent=rewardAudioEnabled?'🔊 Sonido de refuerzo: activado':'🔇 Sonido de refuerzo: apagado';btn.setAttribute('aria-pressed',String(rewardAudioEnabled));}
+
 function createCelebration(){
  const layer=$('#celebrationLayer');if(!layer)return;
  const icons=['⭐','✨','🌟','🪐','💫','🚀'];
@@ -176,51 +232,72 @@ function createCelebration(){
  }
  const rocket=document.createElement('span');rocket.className='rocket-pop';rocket.textContent='🚀';layer.appendChild(rocket);setTimeout(()=>rocket.remove(),1600);
 }
-function pushLog(choice,correct,kind='initial'){data.logs.push({timestamp:new Date().toISOString(),runId:currentRunId,phase:active,phaseLabel:phaseLabel(active),block:blockIndex,trial:cursor+1,relation:current.relation,body:bodyById(current.bodyId).name,sample:stimLabel(current.sample),sampleType:current.sample.type,options:current.choices.map(stimLabel).join(' | '),correctStimulus:stimLabel(current.target),correctPosition:current.correctPos+1,selected:stimLabel(choice),correct:!!correct,eventType:kind});try{localStorage.setItem(STORE_KEY,JSON.stringify(data));}catch(err){console.warn('No se pudo guardar el progreso localmente.',err);}}
+function pushLog(choice,correct,kind='initial'){data.logs.push({timestamp:new Date().toISOString(),runId:currentRunId,phase:active,phaseLabel:phaseLabel(active),block:blockIndex,trial:cursor+1,relation:current.relation,body:bodyById(current.bodyId).name,sample:stimLabel(current.sample),sampleType:current.sample.type,options:current.choices.map(stimLabel).join(' | '),correctStimulus:stimLabel(current.target),correctPosition:current.correctPos+1,selected:stimLabel(choice),correct:!!correct,eventType:kind,accessMode:phaseAccessMode});try{localStorage.setItem(STORE_KEY,JSON.stringify(data));}catch(err){console.warn('No se pudo guardar el progreso localmente.',err);}}
 function onChoice(e){const button=e.target.closest('[data-choice]');if(!button||!current)return;if(e.target.closest('[data-speak]'))return;const choices=[...$('#choiceGrid').querySelectorAll('[data-choice]')];const selected=choices.find(c=>c.dataset.choice===button.dataset.choice);if(!selected)return;const choice=current.choices[Number(selected.dataset.idx)];const correct=stimKey(choice)===stimKey(current.target);const training=isTraining(active);
- if(awaitingCorrection){if(correct){pushLog(choice,true,'correction');awaitingCorrection=false;selected.classList.add('correct-hint');choices.forEach(c=>c.disabled=true);showFeedback('good','🌟','¡Eso es!','¡Ya está! Vamos a la siguiente.');createCelebration();$('#nextTrial').disabled=false;$('#nextTrial').textContent='¡Siguiente! →';data.stars+=1;saveData();}else{showFeedback('bad','🪐','Mira la que brilla','Toca la opción iluminada y seguimos.');}return;}
+ if(awaitingCorrection){if(correct){pushLog(choice,true,'correction');awaitingCorrection=false;selected.classList.add('correct-hint');choices.forEach(c=>c.disabled=true);showFeedback('good','🌟','¡Eso es!','¡Ya está! Vamos a la siguiente.');createCelebration();playSpaceReward();$('#nextTrial').disabled=false;$('#nextTrial').textContent='¡Siguiente! →';if(phaseAccessMode!=='adult_override')data.stars+=1;saveData();}else{showFeedback('bad','🪐','Mira la que brilla','Toca la opción iluminada y seguimos.');}return;}
  if(feedbackState)return;phaseInitialTotal++;if(correct)phaseInitialCorrect++;pushLog(choice,correct,'initial');
- if(training){if(correct){feedbackState='good';selected.classList.add('selected');choices.forEach(c=>c.disabled=true);showFeedback('good','🚀','¡Lo lograste!','¡Una estrella para tu nave!');createCelebration();data.stars+=1;$('#nextTrial').disabled=false;$('#nextTrial').textContent='¡Siguiente! →';saveData();}else{awaitingCorrection=true;feedbackState='error';selected.classList.add('selected');const correctBtn=choices.find(c=>c.dataset.choice===stimKey(current.target));if(correctBtn)correctBtn.classList.add('correct-hint');choices.forEach(c=>c.disabled=true);if(correctBtn)correctBtn.disabled=false;showFeedback('bad','🪐','¡Vamos a descubrirlo!','Mira la opción que brilla y tócala para aprender.');$('#nextTrial').disabled=true;$('#nextTrial').textContent='Toca la que brilla';}}else{feedbackState='recorded';selected.classList.add('selected');choices.forEach(c=>c.disabled=true);showFeedback('neutral','✨','¡Listo!','Vamos con la siguiente.');$('#nextTrial').disabled=false;$('#nextTrial').textContent='¡Siguiente! →';}
+ if(training){if(correct){feedbackState='good';selected.classList.add('selected');choices.forEach(c=>c.disabled=true);showFeedback('good','🚀','¡Lo lograste!','¡Una estrella para tu nave!');createCelebration();playSpaceReward();if(phaseAccessMode!=='adult_override')data.stars+=1;$('#nextTrial').disabled=false;$('#nextTrial').textContent='¡Siguiente! →';saveData();}else{awaitingCorrection=true;feedbackState='error';selected.classList.add('selected');const correctBtn=choices.find(c=>c.dataset.choice===stimKey(current.target));if(correctBtn)correctBtn.classList.add('correct-hint');choices.forEach(c=>c.disabled=true);if(correctBtn)correctBtn.disabled=false;showFeedback('bad','🪐','¡Vamos a descubrirlo!','Mira la opción que brilla y tócala para aprender.');$('#nextTrial').disabled=true;$('#nextTrial').textContent='Toca la que brilla';}}else{feedbackState='recorded';selected.classList.add('selected');choices.forEach(c=>c.disabled=true);showFeedback('neutral','✨','¡Listo!','Vamos con la siguiente.');$('#nextTrial').disabled=false;$('#nextTrial').textContent='¡Siguiente! →';}
 }
 function advanceTrial(){if(awaitingCorrection)return;cursor++;renderTrial();}
 function exitPhase(){const ok=confirm('¿Salir de esta fase? Los ensayos registrados se conservarán, pero la fase no se marcará como completada.');if(!ok)return;active=null;$('#workspace').classList.add('hidden');renderPhaseGrid();renderGlobalProgress();}
 function finishPhase(){
  const finishedId=active;const p=phaseDefs.find(x=>x.id===finishedId);
  const score=phaseInitialTotal?Math.round(phaseInitialCorrect/phaseInitialTotal*1000)/10:0;
- const result={phase:finishedId,phaseLabel:phaseLabel(finishedId),runId:currentRunId,date:new Date().toISOString(),block:blockIndex,correct:phaseInitialCorrect,total:phaseInitialTotal,percent:score};
+ const result={phase:finishedId,phaseLabel:phaseLabel(finishedId),runId:currentRunId,date:new Date().toISOString(),block:blockIndex,correct:phaseInitialCorrect,total:phaseInitialTotal,percent:score,accessMode:phaseAccessMode};
+ // Una ejecución abierta desde el menú adulto queda registrada, pero nunca completa/desbloquea la ruta infantil.
+ if(phaseAccessMode==='adult_override'){
+  saveData();
+  renderEnd({result,mastered:false,training:false,adultOverride:true});
+  active=null;
+  return;
+ }
  if(isTraining(finishedId)){
   const store=data.blocks[finishedId];store.results.push(result);
   const criterionMet=result.total===12?result.correct>=10:result.correct>=Math.ceil(result.total*(10/12));
   store.consecutive=criterionMet?1:0;
   const mastered=criterionMet;
-  if(mastered){data.completed[finishedId]=true;data.completedAt[finishedId]=new Date().toISOString();}
+  if(mastered){data.completed[finishedId]=true;data.completedAt[finishedId]=new Date().toISOString();}else{delete data.completed[finishedId];delete data.completedAt[finishedId];}
   saveData();renderEnd({result,mastered,training:true,consecutive:store.consecutive});
  }else{data.completed[finishedId]=true;data.completedAt[finishedId]=new Date().toISOString();saveData();renderEnd({result,mastered:true,training:false});}
  active=null;
 }
 function renderEnd(info){
- const {result,mastered,training}=info;
+ const {result,mastered,training,adultOverride=false}=info;
  let headline='¡Misión terminada!';
  let message='¡Gracias por ayudar en esta aventura! Vamos paso a paso.';
- if(training){
+ if(adultOverride){headline='Misión abierta para revisión';message='Esta misión se abrió desde las opciones para adultos. Las respuestas quedan registradas, pero esta ejecución no cuenta como misión completada en la ruta del niño.';}
+ else if(training){
   if(mastered){headline='¡Lo conseguiste!';message='¡Genial! Has conseguido la insignia de esta misión. ¡Vamos a la siguiente!';}
   else{headline='¡Vamos otra vez!';message='Para conseguir la insignia necesitamos al menos 10 aciertos de 12. ¡Probemos esta misión otra vez!';}
- }else if(result.phase==='derived'){message='¡Gracias por jugar! Esta misión terminó. La persona adulta podrá revisar los resultados después.';}
+ }else if(['baseline','derivedProbe','testCategory','testSolar'].includes(result.phase)){message='¡Gracias por jugar! Esta misión terminó. La persona adulta podrá revisar los resultados después.';}
  else if(result.phase==='generalization'){message='¡Buen trabajo! Los dibujos cambiaron un poquito en esta misión.';}
  else if(result.phase==='maintenance'){message='¡Gracias por volver a jugar! Ahora podemos recordar lo que aprendimos.';}
- const next=training&&!mastered?`<button type="button" id="nextBlock" class="btn primary">¡Intentarlo otra vez! ↻</button>`:`<button type="button" id="returnPhases" class="btn primary">Volver a las misiones</button>`;
- const adminResult=`<details class="note adult-note"><summary>Registro de esta misión (persona adulta)</summary><div class="score-grid"><div class="score-card"><div class="num">${result.correct}/${result.total}</div><div class="small-label">Aciertos iniciales</div></div><div class="score-card"><div class="num">${result.percent}%</div><div class="small-label">Porcentaje</div></div><div class="score-card"><div class="num">${data.stars} ✦</div><div class="small-label">Estrellas acumuladas</div></div></div><div class="table-wrap"><table class="summary-table"><thead><tr><th>Dato</th><th>Resultado</th></tr></thead><tbody><tr><td>Fase</td><td>${esc(result.phaseLabel)}</td></tr><tr><td>Fecha</td><td>${new Date(result.date).toLocaleString('es-CO')}</td></tr><tr><td>Registros guardados</td><td>${data.logs.filter(x=>x.runId===result.runId).length}</td></tr></tbody></table></div><p class="helptext">Los resultados se guardan en este dispositivo. La persona adulta puede exportarlos desde “Opciones para el adulto”.</p><button type="button" id="downloadJson" class="btn small">Guardar copia JSON</button></details>`;
+ const next=!adultOverride&&training&&!mastered?`<button type="button" id="nextBlock" class="btn primary">¡Intentarlo otra vez! ↻</button>`:`<button type="button" id="returnPhases" class="btn primary">Volver a las misiones</button>`;
+ const adminResult=`<details class="note adult-note"><summary>Registro de esta misión (persona adulta)</summary><div class="score-grid"><div class="score-card"><div class="num">${result.correct}/${result.total}</div><div class="small-label">Aciertos iniciales</div></div><div class="score-card"><div class="num">${result.percent}%</div><div class="small-label">Porcentaje</div></div><div class="score-card"><div class="num">${data.stars} ✦</div><div class="small-label">Estrellas acumuladas</div></div></div><div class="table-wrap"><table class="summary-table"><thead><tr><th>Dato</th><th>Resultado</th></tr></thead><tbody><tr><td>Fase</td><td>${esc(result.phaseLabel)}</td></tr><tr><td>Acceso</td><td>${result.accessMode==='adult_override'?'Acceso manual de persona adulta':'Secuencia habitual'}</td></tr><tr><td>Fecha</td><td>${new Date(result.date).toLocaleString('es-CO')}</td></tr><tr><td>Registros guardados</td><td>${data.logs.filter(x=>x.runId===result.runId).length}</td></tr></tbody></table></div><p class="helptext">Los resultados se guardan en este dispositivo. La persona adulta puede exportarlos desde “Opciones para el adulto”.</p><button type="button" id="downloadJson" class="btn small">Guardar copia JSON</button></details>`;
  $('#workspace').innerHTML=`<div class="panel"><div class="result-banner"><span class="pill">${mastered?'🚀 ¡Insignia de explorador!':'✨ ¡Sigue intentándolo!'}</span><h2 style="margin:12px 0 8px">${esc(headline)}</h2><p>${esc(message)}</p></div><div class="workspace-controls"><span class="helptext">Puedes descansar un momento antes de seguir.</span><div>${next}</div></div>${adminResult}</div>`;
  $('#downloadJson').addEventListener('click',downloadJson);const nb=$('#nextBlock');if(nb)nb.addEventListener('click',()=>startPhase(result.phase));const rp=$('#returnPhases');if(rp)rp.addEventListener('click',()=>{$('#workspace').classList.add('hidden');$('#results').classList.add('hidden');renderPhaseGrid();renderGlobalProgress();$('#phaseGrid').scrollIntoView({behavior:'smooth',block:'start'});});$('#workspace').scrollIntoView({behavior:'smooth',block:'start'});renderSummary();
 }
 function renderSummary(){const res=$('#results');if(!data.logs.length){res.classList.add('hidden');return;}res.classList.remove('hidden');const keys=[...new Set(data.logs.filter(x=>x.eventType==='initial').map(x=>x.phase+'||'+x.relation))];let rows='';keys.forEach(key=>{const [id,rel]=key.split('||');const logs=data.logs.filter(x=>x.phase===id&&x.relation===rel&&x.eventType==='initial');const correct=logs.filter(x=>x.correct).length;rows+=`<tr><td>${esc(phaseLabel(id))}</td><td>${esc(relationLabel(rel))}</td><td>${correct}/${logs.length}</td><td>${logs.length?Math.round(correct/logs.length*1000)/10:0}%</td></tr>`;});res.innerHTML=`<div class="panel"><div class="workspace-head"><div><span class="eyebrow">Panel de datos</span><h2>Resultados por relación</h2><p>Los porcentajes se calculan sobre las respuestas iniciales; los reintentos de corrección se almacenan aparte.</p></div><button class="btn small" id="summaryCsv">Descargar registro CSV ↓</button></div><div class="table-wrap"><table class="summary-table"><thead><tr><th>Fase</th><th>Relación</th><th>Aciertos / ensayos</th><th>Porcentaje</th></tr></thead><tbody>${rows}</tbody></table></div><p class="helptext" style="margin-top:12px">Para la persona adulta: el CSV incluye la clave de corrección. No compartas datos que identifiquen al niño.</p></div>`;$('#summaryCsv').addEventListener('click',downloadCsv);}
 function csvEscape(s){const str=String(s??'');return '"'+str.replace(/"/g,'""')+'"';}
-function downloadCsv(){const headers=['fecha_hora','id_sesion','fase','bloque','ensayo','relacion','astro','muestra','tipo_muestra','opciones_en_orden','estimulo_correcto','posicion_correcta_1a4','respuesta_seleccionada','acierto','tipo_registro'];const lines=[headers.map(csvEscape).join(';')];data.logs.forEach(r=>lines.push([r.timestamp,r.runId,r.phaseLabel,r.block,r.trial,r.relation,r.body,r.sample,r.sampleType,r.options,r.correctStimulus,r.correctPosition,r.selected,r.correct?'SI':'NO',r.eventType].map(csvEscape).join(';')));downloadBlob('\ufeff'+lines.join('\r\n'),'mision-sistema-solar-registro.csv','text/csv;charset=utf-8');}
+function downloadCsv(){const headers=['fecha_hora','id_sesion','fase','modo_acceso','bloque','ensayo','relacion','astro','muestra','tipo_muestra','opciones_en_orden','estimulo_correcto','posicion_correcta_1a4','respuesta_seleccionada','acierto','tipo_registro'];const lines=[headers.map(csvEscape).join(';')];data.logs.forEach(r=>lines.push([r.timestamp,r.runId,r.phaseLabel,r.accessMode||'sequential',r.block,r.trial,r.relation,r.body,r.sample,r.sampleType,r.options,r.correctStimulus,r.correctPosition,r.selected,r.correct?'SI':'NO',r.eventType].map(csvEscape).join(';')));downloadBlob('\ufeff'+lines.join('\r\n'),'mision-sistema-solar-registro.csv','text/csv;charset=utf-8');}
 function downloadJson(){downloadBlob(JSON.stringify(data,null,2),'mision-sistema-solar-respaldo.json','application/json');}
 function downloadBlob(content,name,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
 function resetAll(){const ok=confirm('Esto borrará del navegador el progreso y los resultados guardados para este juego. ¿Continuar?');if(!ok)return;localStorage.removeItem(STORE_KEY);data=blankData();active=null;queue=[];cursor=0;current=null;$('#workspace').classList.add('hidden');$('#results').classList.add('hidden');renderPhaseGrid();renderGlobalProgress();}
 $('#phaseGrid').addEventListener('click',e=>{const b=e.target.closest('[data-start-phase]');if(b&&!b.disabled)startPhase(b.dataset.startPhase);});$('#downloadCsv').addEventListener('click',downloadCsv);$('#resetAll').addEventListener('click',resetAll);
-renderPhaseGrid();renderGlobalProgress();renderSummary();
+const adultPhaseSelect=$('#adultPhaseSelect');phaseDefs.forEach(p=>{const opt=document.createElement('option');opt.value=p.id;opt.textContent=`${p.n}. ${p.title}`;adultPhaseSelect.appendChild(opt);});
+$('#adultOpenPhase').addEventListener('click',(event)=>{
+ event.preventDefault();event.stopPropagation();
+ const id=adultPhaseSelect.value;
+ if(!phaseDefs.some(p=>p.id===id)){alert('Selecciona una misión válida.');return;}
+ const label=phaseLabel(id);
+ if(!window.confirm(`ACCESO EXCLUSIVO PARA LA PERSONA ADULTA\n\nAbrir “${label}” sin completar las misiones anteriores. El acceso quedará registrado como manual y NO desbloqueará la ruta infantil.\n\n¿Continuar?`))return;
+ try{
+  startPhase(id,true);
+  const menu=$('#adultMenu');if(menu)menu.open=false;
+ }catch(error){console.error('Error al abrir una misión con acceso adulto:',error);alert('No se pudo abrir la misión. Recarga la página y vuelve a intentarlo.');}
+});
+$('#toggleRewardAudio').addEventListener('click',()=>{rewardAudioEnabled=!rewardAudioEnabled;try{localStorage.setItem('misionSistemaSolarRewardAudio',String(rewardAudioEnabled));}catch(e){}renderRewardAudioButton();});
+renderRewardAudioButton();renderPhaseGrid();renderGlobalProgress();renderSummary();
 </script>
 </body>
 </html>
