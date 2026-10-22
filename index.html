@@ -114,10 +114,11 @@ function astroSvg(body,variant=0){
  return `<svg viewBox="0 0 100 100" role="img" aria-label="Ilustración del ${esc(body.name)} con volumen y detalles" xmlns="http://www.w3.org/2000/svg">${defs}${art}</svg>`;
 }
 function stimHtml(stim,where='choice'){
- if(stim.type==='A'){const b=bodyById(stim.body);return `<div class="stim-card"><div class="planet-art ${where==='sample'?'large':''}">${astroSvg(b,stim.variant||0)}</div>${where==='choice'?`<span class="choice-name">Imagen</span>`:`<span class="micro">Imagen del astro</span>`}</div>`;}
- if(stim.type==='B'){const b=bodyById(stim.body);return `<div class="stim-card"><span role="button" tabindex="0" class="play-audio" data-speak="${esc(b.name)}" aria-label="Escuchar el nombre">🔊 ${where==='sample'?'Escuchar nombre':'Escuchar'}</span><span class="micro">${where==='sample'?'Toca para escuchar otra vez.':'Toca el altavoz para escuchar.'}</span></div>`;}
- if(stim.type==='C'){const b=bodyById(stim.body);return `<div class="stim-card"><div class="word-stim">${esc(b.text)}</div><span class="micro">Palabra escrita</span></div>`;}
- if(stim.type==='D'){const c=categoryStimuli.find(x=>x.id===stim.category)||categoryStimuli[0];return `<div class="stim-card"><div class="category-stim"><span class="category-icon">${c.icon}</span><span>${esc(c.label)}</span></div><span class="micro">Categoría</span></div>`;}
+ // No mostrar etiquetas de modalidad ("Imagen", "Palabra escrita", etc.): son estímulos adicionales que podrían controlar la respuesta.
+ if(stim.type==='A'){const b=bodyById(stim.body);return `<div class="stim-card"><div class="planet-art ${where==='sample'?'large':''}">${astroSvg(b,stim.variant||0)}</div></div>`;}
+ if(stim.type==='B'){const b=bodyById(stim.body);return `<div class="stim-card"><button type="button" class="play-audio" data-speak="${esc(b.name)}" aria-label="Reproducir audio" title="Reproducir audio">🔊</button></div>`;}
+ if(stim.type==='C'){const b=bodyById(stim.body);return `<div class="stim-card"><div class="word-stim">${esc(b.text)}</div></div>`;}
+ if(stim.type==='D'){const c=categoryStimuli.find(x=>x.id===stim.category)||categoryStimuli[0];return `<div class="stim-card"><div class="category-stim"><span class="category-icon">${c.icon}</span><span>${esc(c.label)}</span></div></div>`;}
  if(stim.type==='E'){const c=systemChoices.find(x=>x.id===stim.id)||systemChoices[0];return `<div class="stim-card"><div class="category-stim"><span class="category-icon">${c.icon}</span><span class="choice-name">${esc(c.label)}</span></div></div>`;}
  return '';
 }
@@ -166,16 +167,16 @@ function balancedOrderWithExistingTargets(trials){const groups={};trials.forEach
 function phaseLabel(id){return (phaseDefs.find(p=>p.id===id)||{}).title||id;}
 function relationLabel(rel){const map={AB:'A–B · Imagen → audio',BC:'B–C · Audio → palabra escrita',BA:'B–A · Audio → imagen',CB:'C–B · Palabra escrita → audio',AC:'A–C · Imagen → palabra escrita',CA:'C–A · Palabra escrita → imagen',AA:'A–A · Identidad visual',BB:'B–B · Identidad auditiva',CC:'C–C · Identidad escrita',"A′-B":'A′–B · Nueva imagen → audio',"A′-C":'A′–C · Nueva imagen → palabra escrita','MTO-CATEGORÍA':'Muchos a uno · Categoría','MTO-SISTEMA-SOLAR':'Muchos a uno · Sistema Solar','MANTENIMIENTO-CATEGORÍA':'Mantenimiento · categoría','MANTENIMIENTO-SISTEMA':'Mantenimiento · Sistema Solar','MANTENIMIENTO-BA':'Mantenimiento · B–A','MANTENIMIENTO-CB':'Mantenimiento · C–B','MANTENIMIENTO-AC':'Mantenimiento · A–C','MANTENIMIENTO-CA':'Mantenimiento · C–A'};return map[rel]||rel;}
 function explainPhase(id){const msgs={
- baseline:'Mira, escucha y toca la opción que te parezca. ¡No hay prisa!',
- trainAB:'Mira el dibujo. Escucha los nombres y toca el que va con él.',
- trainBC:'Escucha el nombre y busca la palabra que va con él. Puedes escuchar otra vez.',
- derivedProbe:'Mira o escucha y toca la opción que creas que va junto. Busca también los que son iguales.',
+ baseline:'Toca la opción que creas que va junto. ¡No hay prisa!',
+ trainAB:'Mira el dibujo. Escucha las opciones y toca la que va con él.',
+ trainBC:'Escucha el nombre y busca la opción que va con él. Puedes escuchar otra vez.',
+ derivedProbe:'Toca la opción que creas que va junto. Busca también los que son iguales.',
  trainCategory:'¿Dónde va este astro: estrella o planeta?',
- testCategory:'Mira el astro y toca “estrella” o “planeta”. ¡Tú eliges!',
+ testCategory:'Toca la opción que creas que corresponde. ¡Tú eliges!',
  trainSolar:'Busca “Sistema Solar”, la familia del Sol.',
- testSolar:'Mira el astro y toca el grupo que creas que va con él.',
- generalization:'Los dibujos se ven un poco distintos. Busca lo que va junto.',
- maintenance:'¡Vamos a recordar las parejas y los grupos! Es mejor jugar después de unos días.'
+ testSolar:'Toca el grupo que creas que corresponde.',
+ generalization:'Busca lo que va junto, aunque los dibujos se vean un poco distintos.',
+ maintenance:'¡Vamos a recordar lo que va junto!'
  };return msgs[id]||'¡Vamos a jugar!';}
 function startPhase(id,adultOverride=false){if(!adultOverride&&!canOpen(id))return;phaseAccessMode=adultOverride?'adult_override':'sequential';active=id;queue=makePhaseTrials(id);cursor=0;current=null;awaitingCorrection=false;feedbackState=null;phaseInitialCorrect=0;phaseInitialTotal=0;phaseStartLogIndex=data.logs.length;currentRunId=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);blockIndex=isTraining(id)?data.blocks[id].results.length+1:1;$('#results').classList.add('hidden');$('#workspace').classList.remove('hidden');renderPhaseGrid();renderTrial();$('#workspace').scrollIntoView({behavior:'smooth',block:'start'});}
 function renderTrial(){
@@ -184,15 +185,18 @@ function renderTrial(){
  const p=phaseDefs.find(x=>x.id===active);const isAssess=p.kind==='assessment';const total=queue.length;
  const sampleLabel=current.sample.type==='A'?'Mira el dibujo':current.sample.type==='B'?'Escucha el nombre':current.sample.type==='C'?'Mira la palabra':current.sample.type==='D'?'Mira la categoría':'Mira el grupo';
  let choicePrompt='Toca la opción que creas que va junto.';
- if(active==='trainAB')choicePrompt='Toca el altavoz para escuchar. Después, toca la tarjeta que va con el dibujo.';
- else if(active==='trainBC')choicePrompt='Escucha el nombre y toca la palabra que va con él.';
- else if(active==='trainCategory'||active==='testCategory')choicePrompt='¿Estrella o planeta? Toca una opción.';
- else if(active==='trainSolar'||active==='testSolar')choicePrompt='¿A qué grupo pertenece? Toca una opción.';
- else if(current.choicesType==='B')choicePrompt='Toca el altavoz para escuchar y la tarjeta para elegir.';
- else if(current.choicesType==='C')choicePrompt='Toca la palabra que creas que va junto.';
+ // En evaluación, usar una consigna neutra y no rotular la modalidad de la muestra.
+ if(!isAssess){
+  if(active==='trainAB')choicePrompt='Toca el altavoz para escuchar. Después, toca la opción que va con el dibujo.';
+  else if(active==='trainBC')choicePrompt='Escucha el nombre y toca la opción que va con él.';
+  else if(active==='trainCategory')choicePrompt='¿Estrella o planeta? Toca una opción.';
+  else if(active==='trainSolar')choicePrompt='¿A qué grupo pertenece? Toca una opción.';
+  else if(current.choicesType==='B')choicePrompt='Toca el altavoz para escuchar y después elige una opción.';
+  else if(current.choicesType==='C')choicePrompt='Toca la opción que creas que va junto.';
+ }
  let choices=current.choices.map((s,i)=>`<button type="button" class="choice" data-choice="${esc(stimKey(s))}" data-idx="${i}" aria-label="Elegir opción ${i+1}">${stimHtml(s,'choice')}</button>`).join('');
  const stageText=isAssess?'¡Tu turno!':'¡Vamos a aprender!';
- $('#workspace').innerHTML=`<div class="panel"><div class="workspace-head"><div><span class="pill">${p.icon} Misión ${p.n} de ${phaseDefs.length} · ${stageText}</span><h2>${esc(p.kidTitle||p.title)}</h2><p>${esc(explainPhase(active))}</p></div><button type="button" class="btn ghost small" id="exitPhase">Salir</button></div><div class="trial-meta"><span>Pregunta ${cursor+1} de ${total}</span>${phaseAccessMode==='adult_override'?`<span>⚠️ Acceso manual de adulto</span>`:''}${isTraining(active)?`<span>Intento ${blockIndex}</span>`:''}</div><div class="trial-progress"><div class="statline"><span>¡Sigue adelante!</span><strong>${Math.round(cursor/total*100)}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${cursor/total*100}%"></div></div></div><div class="trial-layout"><div class="sample-area"><div class="label">${sampleLabel}</div><div class="sample-frame">${stimHtml(current.sample,'sample')}</div></div><div class="choices-area"><div class="label kid-prompt">${choicePrompt}</div><div class="choice-grid" id="choiceGrid">${choices}</div><div id="feedbackBox" class="feedback" role="status"></div><div class="workspace-controls"><span class="helptext">${isAssess?'Elige una opción. Después iremos a la siguiente pregunta.':'¡Cada intento te ayuda a aprender! Puedes tomarte tu tiempo.'}</span><button type="button" id="nextTrial" class="btn primary" disabled>¡Siguiente! →</button></div></div></div></div>`;
+ $('#workspace').innerHTML=`<div class="panel"><div class="workspace-head"><div><span class="pill">${p.icon} Misión ${p.n} de ${phaseDefs.length} · ${stageText}</span><h2>${esc(p.kidTitle||p.title)}</h2><p>${esc(explainPhase(active))}</p></div><button type="button" class="btn ghost small" id="exitPhase">Salir</button></div><div class="trial-meta"><span>Pregunta ${cursor+1} de ${total}</span>${phaseAccessMode==='adult_override'?`<span>⚠️ Acceso manual de adulto</span>`:''}${isTraining(active)?`<span>Intento ${blockIndex}</span>`:''}</div><div class="trial-progress"><div class="statline"><span>¡Sigue adelante!</span><strong>${Math.round(cursor/total*100)}%</strong></div><div class="progress-track"><div class="progress-fill" style="width:${cursor/total*100}%"></div></div></div><div class="trial-layout"><div class="sample-area">${isAssess?'':`<div class="label">${sampleLabel}</div>`}<div class="sample-frame">${stimHtml(current.sample,'sample')}</div></div><div class="choices-area"><div class="label kid-prompt">${choicePrompt}</div><div class="choice-grid" id="choiceGrid">${choices}</div><div id="feedbackBox" class="feedback" role="status"></div><div class="workspace-controls"><span class="helptext">${isAssess?'Elige una opción. Después iremos a la siguiente pregunta.':'¡Cada intento te ayuda a aprender! Puedes tomarte tu tiempo.'}</span><button type="button" id="nextTrial" class="btn primary" disabled>¡Siguiente! →</button></div></div></div></div>`;
  $('#exitPhase').addEventListener('click',exitPhase);$('#nextTrial').addEventListener('click',()=>{if(!$('#nextTrial').disabled)advanceTrial();});$('#choiceGrid').addEventListener('click',onChoice);$('#workspace').querySelectorAll('[data-speak]').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();speak(b.dataset.speak);});b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();speak(b.dataset.speak);}});});
 }
 function speak(words){if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){showFeedback('neutral','🔈','Audio no disponible','Prueba el juego en una versión reciente de Chrome o Edge, o con otro navegador compatible.');return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(words);u.lang='es-ES';u.rate=.86;u.pitch=1;const voices=window.speechSynthesis.getVoices();const spanish=voices.find(v=>/^es(-|_)/i.test(v.lang));if(spanish)u.voice=spanish;window.speechSynthesis.speak(u);}
